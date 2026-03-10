@@ -45,7 +45,7 @@
         const { useState, useEffect } = React;
         
         // ⭐ 여기에 Google Apps Script 웹 앱 URL을 입력하세요!
-        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbznOzM71b1ZRquWqWDS2T54qFYUGVQEaeyBfcm3N_sXOHdvV0N8FkT7JcqE1w-cL-nT/exec';
+        const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwvyE9SMhcT0JYcIEJ-WUpAnjQxCH5_MUmRsOJMidwSVNW7eFtJ8yHfIsM5wtp8PzLc/exec';
         
         const BRAND_COLORS = {
             primary: '#971B2F',
@@ -106,43 +106,38 @@
             ],
             '3부': [
                 { name: '안영재', division: '법인', targetKRW: 28, targetLocal: 1741878, currency: 'EUR', location: '프랑스', growth: 65, sales: 0, lastYearAchievement: 67 },
-                { name: '김남건', division: '법인', targetKRW: 23, targetLocal: 11652213, currency: 'CNY', location: '중국 광동성', growth: 25, sales: 0, lastYearAchievement: 100 },
+                { name: '김남건', division: '시장개발팀(신규)', targetKRW: 23, targetLocal: 11652213, currency: 'CNY', location: '중국 광동성', growth: 25, sales: 0, lastYearAchievement: 100 },
                 { name: '이상욱', division: '법인', targetKRW: 15, targetLocal: 268738574, currency: 'VND', location: '베트남법인', growth: 67, sales: 0, lastYearAchievement: 100 },
                 { name: '민들레', division: '법인', targetKRW: 12, targetLocal: 33287101, currency: 'TRY', location: '튀르키예법인', growth: 110, sales: 0, lastYearAchievement: 67 },
                 { name: '정창경', division: '지사', targetKRW: 13, targetLocal: 914064, currency: 'USD', location: '태국지사', growth: 50, sales: 0, lastYearAchievement: 100 },
                 { name: '이민지', division: '지사', targetKRW: 14, targetLocal: 984377, currency: 'USD', location: '인도네시아지사', growth: 50, sales: 0, lastYearAchievement: 100 },
                 { name: '이용배', division: '지사', targetKRW: 10, targetLocal: 622099, currency: 'EUR', location: '폴란드지사', growth: 100, sales: 0, lastYearAchievement: 50 },
                 { name: '조배근', division: '지사', targetKRW: 12, targetLocal: 746519, currency: 'EUR', location: '스위스지사', growth: 100, sales: 0, lastYearAchievement: 50 },
-                { name: '권해섭', division: '지사', targetKRW: 6, targetLocal: 421876, currency: 'USD', location: '필리핀지사', growth: 100, sales: 0, lastYearAchievement: 50 }
+                { name: '권해섭', division: '지사', targetKRW: 6, targetLocal: 703126, currency: 'USD', location: '필리핀지사', growth: 100, sales: 0, lastYearAchievement: 50 }
             ],
-            '4부': [
-                { name: '오미소', division: '해외', targetKRW: 6, targetLocal: 421876, currency: 'USD', location: '필리핀 지사', growth: 100, sales: 0, lastYearAchievement: 50 },
+            '4부(해외)': [
+                { name: '오미소', division: '해외', targetKRW: 6, targetLocal: 703126, currency: 'USD', location: '필리핀 지사', growth: 100, sales: 0, lastYearAchievement: 50 },
                 { name: '김단비', division: '해외', targetKRW: 17, targetLocal: 1057569, currency: 'EUR', location: '이탈리아', growth: 37, sales: 0, lastYearAchievement: 67 },
                 { name: '최빅토리아', division: '해외', targetKRW: 13, targetLocal: 914064, currency: 'USD', location: '러시아/카자흐스탄', growth: 63, sales: 0, lastYearAchievement: 100 },
                 { name: '황성덕', division: '해외', targetKRW: 25, targetLocal: 1757815, currency: 'USD', location: 'UAE', growth: 39, sales: 0, lastYearAchievement: 67 },
                 { name: '서준원', division: '해외', targetKRW: 5, targetLocal: 351563, currency: 'USD', location: '모로코', growth: 150, sales: 0, lastYearAchievement: 33 },
                 { name: '문예림', division: '해외', targetKRW: 11, targetLocal: 773439, currency: 'USD', location: '아르헨티나', growth: 50, sales: 0, lastYearAchievement: 67 },
-                { name: '장지웅', division: '해외', targetKRW: 9, targetLocal: 632813, currency: 'USD', location: '칠레', growth: 80, sales: 0, lastYearAchievement: 50 },
+                { name: '장지웅', division: '해외', targetKRW: 9, targetLocal: 632813, currency: 'USD', location: '칠레', growth: 80, sales: 0, lastYearAchievement: 50 }
+            ],
+            '4부(국내)': [
                 { name: '천장훈', division: '국내', targetKRW: 15, targetLocal: 15, currency: 'KRW', location: '아파트 공용부', growth: 28, sales: 0, lastYearAchievement: 100 },
                 { name: '최자은', division: '국내', targetKRW: 15, targetLocal: 15, currency: 'KRW', location: '커뮤니티 인바디존', growth: 114, sales: 0, lastYearAchievement: 50 },
-                { name: '정명', division: '국내', targetKRW: 20, targetLocal: 20, currency: 'KRW', location: '기업', growth: 36, sales: 0, lastYearAchievement: 75 },
+                { name: '정명', division: '국내', targetKRW: 17, targetLocal: 17, currency: 'KRW', location: '기업', growth: 36, sales: 0, lastYearAchievement: 75 },
                 { name: '김남국', division: '국내', targetKRW: 10, targetLocal: 10, currency: 'KRW', location: '대학교', growth: 30, sales: 0, lastYearAchievement: 75 },
                 { name: '김명수', division: '국내', targetKRW: 5, targetLocal: 5, currency: 'KRW', location: '체육회 연맹', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '김보경', division: '국내', targetKRW: 5, targetLocal: 5, currency: 'KRW', location: 'P3', growth: 108, sales: 0, lastYearAchievement: 42 },
-                { name: '양윤정', division: '국내', targetKRW: 10, targetLocal: 10, currency: 'KRW', location: 'GLIM', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '정하건', division: 'W', targetKRW: 2, targetLocal: 2, currency: 'KRW', location: 'GLIM 연구자', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '신태환', division: 'W', targetKRW: 2, targetLocal: 2, currency: 'KRW', location: '건강검진센터', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '양윤선', division: 'W', targetKRW: 2, targetLocal: 2, currency: 'KRW', location: '노인복지관', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '김만중', division: 'W', targetKRW: 1.7, targetLocal: 1.7, currency: 'KRW', location: '국민체력사업', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '이서환', division: 'W', targetKRW: 1.5, targetLocal: 1.5, currency: 'KRW', location: 'B2B 개척', growth: 0, sales: 0, lastYearAchievement: 100 }
+                { name: '윤혜린', division: 'BWA 7대', targetKRW: 7, targetLocal: 7, currency: 'KRW', location: 'BWA/970 7대', growth: 0, sales: 0, lastYearAchievement: 100 }
             ],
             '집중시장': [
                 { name: '변재혁', division: '법인', targetKRW: 126, targetLocal: 8859389, currency: 'USD', location: '미국법인 컨슈머', growth: 50, sales: 0, lastYearAchievement: 67 },
                 { name: '박하영', division: '해외', targetKRW: 210, targetLocal: 210, currency: 'KRW', location: '중남미/중동아프리카', growth: 30, sales: 0, lastYearAchievement: 67 },
                 { name: '최민, 신희관, 양윤정', division: '국내', targetKRW: 34, targetLocal: 34, currency: 'KRW', location: 'BWA 170대', growth: 21, sales: 0, lastYearAchievement: 67 },
-                { name: '이동우', division: '국내', targetKRW: 27, targetLocal: 27, currency: 'KRW', location: '강서직영지사', growth: 8, sales: 0, lastYearAchievement: 92 },
-                { name: '이명원', division: '국내', targetKRW: 50, targetLocal: 50, currency: 'KRW', location: '약국/건기식', growth: 669, sales: 0, lastYearAchievement: 8 },
-                { name: '김성훈', division: '전체', targetKRW: 70, targetLocal: 70, currency: 'KRW', location: 'SW 전체', growth: 18, sales: 0, lastYearAchievement: 83 }
+                { name: '이동우', division: '국내', targetKRW: 30, targetLocal: 30, currency: 'KRW', location: '강서직영지사', growth: 8, sales: 0, lastYearAchievement: 92 },
+                { name: '이명원, 장환호', division: '국내', targetKRW: 50, targetLocal: 50, currency: 'KRW', location: '약국/건기식', growth: 669, sales: 0, lastYearAchievement: 8 }
             ]
         };
 
@@ -150,7 +145,8 @@
             '1부': { total: 2.25, prizes: ['1억', '5천만원', '3천만원', '2천만원', '1천5백만원', '1천만원'] },
             '2부': { total: 1.25, prizes: ['5천만원', '3천만원', '2천만원', '1천5백만원', '1천만원'] },
             '3부': { total: 0.83, prizes: ['3천만원', '2천만원', '1천5백만원', '1천만원', '8백만원'] },
-            '4부': { total: 0, prizes: ['개별 산정'] },
+            '4부(해외)': { total: 0, prizes: ['개별 산정'] },
+            '4부(국내)': { total: 0, prizes: ['개별 산정'] },
             '집중시장': { total: 0.53, prizes: ['2천만원', '1천5백만원', '1천만원', '8백만원'] }
         };
 
@@ -174,39 +170,62 @@
                 loadDataFromSheet();
             }, []);
 
-            // Google Sheets에서 데이터 로드
+            // Google Sheets에서 멤버 + 실적 + 환율 모두 로드
             const loadDataFromSheet = async () => {
-                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-                    console.warn('Google Script URL이 설정되지 않았습니다.');
+                if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                    console.warn('Google Script URL 미설정 - HTML 내 데이터 사용');
                     return;
                 }
-
                 setLoading(true);
                 try {
-                    const response = await fetch(GOOGLE_SCRIPT_URL);
+                    const response = await fetch(`${GOOGLE_SCRIPT_URL}?action=getAll`);
                     const data = await response.json();
-                    
-                    const updatedTeams = { ...teams };
-                    
-                    data.forEach(record => {
-                        const { name, month, sales } = record;
-                        
-                        Object.keys(updatedTeams).forEach(league => {
-                            const memberIndex = updatedTeams[league].findIndex(m => m.name === name);
-                            if (memberIndex !== -1) {
-                                if (!updatedTeams[league][memberIndex].monthlySales) {
-                                    updatedTeams[league][memberIndex].monthlySales = {};
-                                }
-                                updatedTeams[league][memberIndex].monthlySales[month] = Number(sales);
-                                
-                                updatedTeams[league][memberIndex].sales = Object.values(
-                                    updatedTeams[league][memberIndex].monthlySales
-                                ).reduce((sum, val) => sum + val, 0);
-                            }
+
+                    // 1) 멤버 데이터로 teams 재구성
+                    if (data.members && data.members.length > 0) {
+                        const builtTeams = {};
+                        data.members.forEach(m => {
+                            const league = m.league;
+                            if (!builtTeams[league]) builtTeams[league] = [];
+                            builtTeams[league].push({
+                                name: m.name,
+                                division: m.division,
+                                targetKRW: Number(m.targetKRW),
+                                targetLocal: Number(m.targetLocal),
+                                currency: m.currency,
+                                location: m.location,
+                                growth: Number(m.growth),
+                                lastYearAchievement: Number(m.lastYearAchievement),
+                                sales: 0,
+                                monthlySales: {}
+                            });
                         });
-                    });
-                    
-                    setTeams(updatedTeams);
+
+                        // 2) 실적 데이터 적용
+                        if (data.sales && data.sales.length > 0) {
+                            data.sales.forEach(record => {
+                                const { name, league, month, sales } = record;
+                                if (builtTeams[league]) {
+                                    const idx = builtTeams[league].findIndex(m => m.name === name);
+                                    if (idx !== -1) {
+                                        if (!builtTeams[league][idx].monthlySales) builtTeams[league][idx].monthlySales = {};
+                                        builtTeams[league][idx].monthlySales[String(month)] = Number(sales);
+                                        builtTeams[league][idx].sales = Object.values(builtTeams[league][idx].monthlySales)
+                                            .reduce((sum, v) => sum + v, 0);
+                                    }
+                                }
+                            });
+                        }
+                        setTeams(builtTeams);
+                    }
+
+                    // 3) 환율 데이터 적용
+                    if (data.rates && Object.keys(data.rates).length > 0) {
+                        setExchangeRates(prev => ({
+                            ...prev,
+                            ...Object.fromEntries(Object.entries(data.rates).map(([k, v]) => [k, Number(v)]))
+                        }));
+                    }
                 } catch (error) {
                     console.error('데이터 로드 실패:', error);
                 } finally {
@@ -214,28 +233,19 @@
                 }
             };
 
-            // Google Sheets에 데이터 저장
+            // Google Sheets에 실적 저장
             const saveDataToSheet = async (name, month, sales) => {
-                if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
-                    alert('⚠️ Google Script URL을 먼저 설정해주세요!\n\n파일 상단의 GOOGLE_SCRIPT_URL 변수에 Google Apps Script 웹 앱 URL을 입력하세요.');
-                    return false;
+                if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
+                    return true;
                 }
-
                 setLoading(true);
                 try {
                     await fetch(GOOGLE_SCRIPT_URL, {
                         method: 'POST',
                         mode: 'no-cors',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({
-                            name: name,
-                            month: month,
-                            sales: sales
-                        })
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'saveSales', name, league: selectedTeam, month, sales })
                     });
-
                     return true;
                 } catch (error) {
                     console.error('데이터 저장 실패:', error);
@@ -243,6 +253,21 @@
                     return false;
                 } finally {
                     setLoading(false);
+                }
+            };
+
+            // Google Sheets에 환율 저장
+            const saveExchangeRatesToSheet = async (rates) => {
+                if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') return;
+                try {
+                    await fetch(GOOGLE_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ action: 'saveExchangeRates', rates })
+                    });
+                } catch (error) {
+                    console.error('환율 저장 실패:', error);
                 }
             };
 
@@ -356,6 +381,7 @@
 
             const handleUpdateExchangeRates = () => {
                 setExchangeRates(tempRates);
+                saveExchangeRatesToSheet(tempRates);
                 setSaveStatus('✓ 환율 업데이트 완료');
                 setTimeout(() => setSaveStatus(''), 2000);
                 setShowExchangeModal(false);
