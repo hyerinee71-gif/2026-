@@ -126,18 +126,18 @@
             ],
             '4부(국내)': [
                 { name: '천장훈', division: '국내', targetKRW: 15, targetLocal: 15, currency: 'KRW', location: '아파트 공용부', growth: 28, sales: 0, lastYearAchievement: 100 },
-                { name: '최자은', division: '국내', targetKRW: 15, targetLocal: 15, currency: 'KRW', location: '커뮤니티 인바디존', growth: 114, sales: 0, lastYearAchievement: 50 },
+                { name: '최자은', division: '국내', targetKRW: 15, targetLocal: 15, currency: '처', location: '커뮤니티 인바디존', growth: 114, sales: 0, lastYearAchievement: 50 },
                 { name: '정명', division: '국내', targetKRW: 17, targetLocal: 17, currency: 'KRW', location: '기업', growth: 36, sales: 0, lastYearAchievement: 75 },
                 { name: '김남국', division: '국내', targetKRW: 10, targetLocal: 10, currency: 'KRW', location: '대학교', growth: 30, sales: 0, lastYearAchievement: 75 },
                 { name: '김명수', division: '국내', targetKRW: 5, targetLocal: 5, currency: 'KRW', location: '체육회 연맹', growth: 0, sales: 0, lastYearAchievement: 100 },
-                { name: '윤혜린', division: 'BWA 7대', targetKRW: 7, targetLocal: 7, currency: 'KRW', location: 'BWA/970 7대', growth: 0, sales: 0, lastYearAchievement: 100 }
+                { name: '윤혜린', division: 'BWA 7대', targetKRW: 7, targetLocal: 7, currency: '대', location: 'BWA/970 7대', growth: 0, sales: 0, lastYearAchievement: 100 }
             ],
             '집중시장': [
                 { name: '변재혁', division: '법인', targetKRW: 126, targetLocal: 8859389, currency: 'USD', location: '미국법인 컨슈머', growth: 50, sales: 0, lastYearAchievement: 67 },
                 { name: '박하영', division: '해외', targetKRW: 210, targetLocal: 210, currency: 'KRW', location: '중남미/중동아프리카', growth: 30, sales: 0, lastYearAchievement: 67 },
-                { name: '최민, 신희관, 양윤정', division: '국내', targetKRW: 34, targetLocal: 34, currency: 'KRW', location: 'BWA 170대', growth: 21, sales: 0, lastYearAchievement: 67 },
+                { name: '최민, 신희관, 양윤정', division: '국내', targetKRW: 34, targetLocal: 34, currency: '대', location: 'BWA 170대', growth: 21, sales: 0, lastYearAchievement: 67 },
                 { name: '이동우', division: '국내', targetKRW: 30, targetLocal: 30, currency: 'KRW', location: '강서직영지사', growth: 8, sales: 0, lastYearAchievement: 92 },
-                { name: '이명원, 장환호', division: '국내', targetKRW: 50, targetLocal: 50, currency: 'KRW', location: '약국/건기식', growth: 669, sales: 0, lastYearAchievement: 8 }
+                { name: '이명원, 장환호', division: '국내', targetKRW: 50, targetLocal: 50, currency: '처', location: '약국/건기식', growth: 669, sales: 0, lastYearAchievement: 8 }
             ]
         };
 
@@ -277,12 +277,15 @@
             };
 
             const convertToKRW = (amount, currency) => {
-                if (currency === 'KRW') return amount; // KRW는 이미 억단위
-                return (amount * exchangeRates[currency]) / 100000000; // 현지화폐 * 환율 / 1억
+                if (currency === 'KRW') return amount;
+                if (currency === '처' || currency === '대') return amount; // 처수/대수는 KRW 환산 없이 숫자 그대로
+                return (amount * exchangeRates[currency]) / 100000000;
             };
 
             const formatLocalCurrency = (amount, currency) => {
                 if (currency === 'KRW') return `${amount}억`;
+                if (currency === '처') return `${amount}처`;
+                if (currency === '대') return `${amount}대`;
                 return amount.toLocaleString();
             };
 
