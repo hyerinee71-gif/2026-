@@ -343,7 +343,9 @@
                 const rawValue = parseFloat(editValue) || 0;
                 // KRW: 원 단위로 입력받아 억 단위로 변환, 처/대: 그대로
                 const member = teams[selectedTeam].find(m => m.name === memberName);
-                const value = (member && member.currency === 'KRW' && rawValue >= 1000000)
+                // KRW: 원 단위 입력 → 자동으로 억 단위 변환 (항상)
+                // 처/대/외화: 그대로
+                const value = (member && member.currency === 'KRW')
                     ? rawValue / 100000000
                     : rawValue;
                 
