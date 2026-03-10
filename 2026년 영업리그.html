@@ -340,7 +340,12 @@
             };
 
             const handleSave = async (memberName) => {
-                const value = parseFloat(editValue) || 0;
+                const rawValue = parseFloat(editValue) || 0;
+                // KRW: 원 단위로 입력받아 억 단위로 변환, 처/대: 그대로
+                const member = teams[selectedTeam].find(m => m.name === memberName);
+                const value = (member && member.currency === 'KRW' && rawValue >= 1000000)
+                    ? rawValue / 100000000
+                    : rawValue;
                 
                 // Google Sheets에 저장
                 const success = await saveDataToSheet(memberName, selectedMonth, value);
@@ -726,7 +731,7 @@
                                                         </td>
                                                         <td style={{padding: '1rem', textAlign: 'right'}}>
                                                             {editingMember===member.name ? (
-                                                                <input type="number" value={editValue} onChange={(e)=>setEditValue(e.target.value)} style={{width: '9rem', padding: '0.5rem 0.75rem', border: `2px solid ${BRAND_COLORS.primary}`, borderRadius: '0.5rem', textAlign: 'right', fontWeight: 'bold', color: BRAND_COLORS.black}} placeholder="현지화폐" autoFocus />
+                                                                <input type="number" value={editValue} onChange={(e)=>setEditValue(e.target.value)} style={{width: '9rem', padding: '0.5rem 0.75rem', border: `2px solid ${BRAND_COLORS.primary}`, borderRadius: '0.5rem', textAlign: 'right', fontWeight: 'bold', color: BRAND_COLORS.black}} placeholder={member.currency === "KRW" ? "원 단위 입력 (예: 100000000)" : member.currency === "처" ? "처수 입력" : member.currency === "대" ? "대수 입력" : "현지화폐"} autoFocus />
                                                             ) : (
                                                                 <span style={{fontWeight: 'bold', color: BRAND_COLORS.black}}>{formatLocalCurrency(member.displaySales,member.currency)}</span>
                                                             )}
