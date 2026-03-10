@@ -729,7 +729,7 @@
                                                         </td>
                                                         <td style={{padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: BRAND_COLORS.coolGray}}>{formatLocalCurrency(member.targetLocal,member.currency)}</td>
                                                         <td style={{padding: '1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
-                                                            {member.salesKRW.toFixed(1)}억
+                                                            {member.currency === '처' || member.currency === '대' ? '-' : `${member.salesKRW.toFixed(1)}억`}
                                                         </td>
                                                         <td style={{padding: '1rem', textAlign: 'right'}}>
                                                             {editingMember===member.name ? (
