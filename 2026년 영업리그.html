@@ -234,7 +234,7 @@
             };
 
             // Google Sheets에 실적 저장
-            const saveDataToSheet = async (name, month, sales) => {
+            const saveDataToSheet = async (name, month, sales, currency) => {
                 if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_SCRIPT_URL_HERE') {
                     return true;
                 }
@@ -244,7 +244,7 @@
                         method: 'POST',
                         mode: 'no-cors',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ action: 'saveSales', name, league: selectedTeam, month, sales })
+                        body: JSON.stringify({ action: 'saveSales', name, league: selectedTeam, month, sales, currency: currency || 'KRW' })
                     });
                     return true;
                 } catch (error) {
@@ -350,7 +350,7 @@
                     : rawValue;
                 
                 // Google Sheets에 저장
-                const success = await saveDataToSheet(memberName, selectedMonth, value);
+                const success = await saveDataToSheet(memberName, selectedMonth, value, member ? member.currency : 'KRW');
                 
                 if (success) {
                     // 현재 시간 생성
@@ -662,7 +662,7 @@
                                         {sortedTeamData.map((member,index)=>(
                                             <div key={member.name}>
                                                 <div style={{display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem'}}>
-                                                    <span style={{fontSize: '1.5rem', fontWeight: '900', width: '2.5rem', textAlign: 'center', color:index===0?ACCENT_COLORS.gold:index===1?ACCENT_COLORS.silver:index===2?ACCENT_COLORS.bronze:BRAND_COLORS.black}}>
+                                                    <span style={{fontSize: index<3?'2.25rem':'1.5rem', fontWeight: '900', width: index<3?'3.5rem':'2.5rem', textAlign: 'center', color:index===0?ACCENT_COLORS.gold:index===1?ACCENT_COLORS.silver:index===2?ACCENT_COLORS.bronze:BRAND_COLORS.black}}>
                                                         {index===0?'🥇':index===1?'🥈':index===2?'🥉':`${index+1}`}
                                                     </span>
                                                     <span style={{fontWeight: 'bold', flex: 1, fontSize: '1.125rem', color: BRAND_COLORS.black}}>{member.name}</span>
@@ -671,10 +671,17 @@
                                                         {member.achievement}%
                                                     </span>
                                                 </div>
-                                                <div style={{position: 'relative', height: '2.5rem', background: '#f3f4f6', borderRadius: '0.75rem', overflow: 'hidden', boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)'}}>
-                                                    <div style={{position: 'absolute', top: 0, left: 0, height: '100%', borderRadius: '0.75rem', transition: 'width 0.7s ease-out', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '0.75rem', width:`${Math.min(member.achievement,100)}%`, backgroundColor: member.achievement>=100 ? ACCENT_COLORS.gold : member.achievement>=80 ? BRAND_COLORS.primary : member.achievement>=50 ? BRAND_COLORS.darkGray : BRAND_COLORS.coolGray}}>
-                                                        {member.achievement>15 && <span style={{fontSize: '0.875rem', fontWeight: '900', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>{formatLocalCurrency(member.sales,member.currency)}</span>}
+                                                <div style={{position: 'relative', height: '2.5rem', background: '#f3f4f6', borderRadius: '0.75rem', overflow: 'visible', boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)'}}>
+                                                    <div style={{position: 'absolute', top: 0, left: 0, height: '100%', borderRadius: '0.75rem', overflow: 'hidden', transition: 'width 0.7s ease-out', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '0.75rem', width:`${Math.min(member.achievement,100)}%`, backgroundColor: index===0 ? ACCENT_COLORS.gold : index===1 ? '#4A90D9' : index===2 ? ACCENT_COLORS.bronze : index===3 ? ACCENT_COLORS.green : member.achievement>=100 ? ACCENT_COLORS.gold : member.achievement>=80 ? BRAND_COLORS.primary : member.achievement>=50 ? BRAND_COLORS.darkGray : BRAND_COLORS.coolGray}}>
+                                                        {member.achievement > 5 && <span style={{fontSize: '0.875rem', fontWeight: '900', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.2)', whiteSpace: 'nowrap'}}>
+                                                            {member.currency === 'KRW' ? `${member.salesKRW.toFixed(1)}억` : formatLocalCurrency(member.sales, member.currency)}
+                                                        </span>}
                                                     </div>
+                                                    {member.achievement <= 5 && member.sales > 0 && (
+                                                        <div style={{position: 'absolute', top: '50%', transform: 'translateY(-50%)', left: `calc(${Math.min(member.achievement,100)}% + 8px)`, fontSize: '0.8rem', fontWeight: '900', color: BRAND_COLORS.darkGray, whiteSpace: 'nowrap'}}>
+                                                            {member.currency === 'KRW' ? `${member.salesKRW.toFixed(1)}억` : formatLocalCurrency(member.sales, member.currency)}
+                                                        </div>
+                                                    )}
                                                     {member.achievement>100 && (
                                                         <div style={{position: 'absolute', top: 0, right: '0.5rem', height: '100%', display: 'flex', alignItems: 'center'}}>
                                                             <span style={{fontSize: '1.5rem'}}>🔥</span>
@@ -698,55 +705,55 @@
                                         <table style={{width: '100%', borderCollapse: 'collapse'}}>
                                             <thead>
                                                 <tr style={{backgroundColor: BRAND_COLORS.primary}}>
-                                                    <th style={{textAlign: 'left', padding: '1rem', color: 'white', fontWeight: '900', borderTopLeftRadius: '0.75rem'}}>순위</th>
-                                                    <th style={{textAlign: 'left', padding: '1rem', color: 'white', fontWeight: '900'}}>이름</th>
-                                                    <th style={{textAlign: 'left', padding: '1rem', color: 'white', fontWeight: '900'}}>매출처</th>
-                                                    <th style={{textAlign: 'center', padding: '1rem', color: 'white', fontWeight: '900'}}>통화</th>
-                                                    <th style={{textAlign: 'right', padding: '1rem', color: 'white', fontWeight: '900'}}>목표(원화)</th>
-                                                    <th style={{textAlign: 'right', padding: '1rem', color: 'white', fontWeight: '900'}}>목표(현지)</th>
-                                                    <th style={{textAlign: 'right', padding: '1rem', color: 'white', fontWeight: '900'}}>실적(원화)</th>
-                                                    <th style={{textAlign: 'right', padding: '1rem', color: 'white', fontWeight: '900'}}>실적(현지)</th>
-                                                    <th style={{textAlign: 'right', padding: '1rem', color: 'white', fontWeight: '900'}}>달성률<br/>(현지화폐)</th>
-                                                    <th style={{textAlign: 'center', padding: '1rem', color: 'white', fontWeight: '900'}}>최종 업데이트</th>
-                                                    <th style={{textAlign: 'center', padding: '1rem', color: 'white', fontWeight: '900', borderTopRightRadius: '0.75rem'}}>수정</th>
+                                                    <th style={{textAlign: 'left', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', borderTopLeftRadius: '0.75rem', whiteSpace: 'nowrap'}}>순위</th>
+                                                    <th style={{textAlign: 'left', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>이름</th>
+                                                    <th style={{textAlign: 'left', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>매출처</th>
+                                                    <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>통화</th>
+                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>목표(원화)</th>
+                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>목표(현지)</th>
+                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>실적(원화)</th>
+                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>실적(현지)</th>
+                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>달성률(현지)</th>
+                                                    <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>최종 업데이트</th>
+                                                    <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', borderTopRightRadius: '0.75rem', whiteSpace: 'nowrap'}}>수정</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {sortedTeamData.map((member,index)=>(
                                                     <tr key={member.name+index} style={{borderBottom: '1px solid #e5e7eb', backgroundColor: index<3?'#fef2f2':'white', transition: 'background-color 0.3s'}}>
-                                                        <td style={{padding: '1rem', fontWeight: '900', fontSize: '1.25rem', color:index===0?ACCENT_COLORS.gold:index===1?ACCENT_COLORS.silver:index===2?ACCENT_COLORS.bronze:BRAND_COLORS.black}}>
+                                                        <td style={{padding: '0.5rem 1rem', fontWeight: '900', fontSize: '1.25rem', color:index===0?ACCENT_COLORS.gold:index===1?ACCENT_COLORS.silver:index===2?ACCENT_COLORS.bronze:BRAND_COLORS.black}}>
                                                             {index===0?'🥇':index===1?'🥈':index===2?'🥉':index+1}
                                                         </td>
-                                                        <td style={{padding: '1rem', fontWeight: 'bold', fontSize: '1.125rem', color: BRAND_COLORS.black}}>{member.name}</td>
-                                                        <td style={{padding: '1rem', color: BRAND_COLORS.coolGray}}>{member.location}</td>
-                                                        <td style={{padding: '1rem', textAlign: 'center'}}>
+                                                        <td style={{padding: '0.5rem 1rem', fontWeight: 'bold', fontSize: '1rem', color: BRAND_COLORS.black, whiteSpace: 'nowrap'}}>{member.name}</td>
+                                                        <td style={{padding: '0.5rem 1rem', color: BRAND_COLORS.coolGray, fontSize: '0.875rem'}}>{member.location}</td>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'center'}}>
                                                             <span style={{padding: '0.25rem 0.75rem', borderRadius: '0.5rem', fontSize: '0.875rem', fontWeight: 'bold', backgroundColor: '#f3f4f6', color: BRAND_COLORS.darkGray}}>
                                                                 {member.currency}
                                                             </span>
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
                                                             {member.targetKRW > 0 ? `${member.targetKRW}억` : '-'}
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'right', fontSize: '0.875rem', color: BRAND_COLORS.coolGray}}>{formatLocalCurrency(member.targetLocal,member.currency)}</td>
-                                                        <td style={{padding: '1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', color: BRAND_COLORS.coolGray}}>{formatLocalCurrency(member.targetLocal,member.currency)}</td>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
                                                             {member.currency === '처' || member.currency === '대' ? '-' : `${member.salesKRW.toFixed(1)}억`}
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'right'}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right'}}>
                                                             {editingMember===member.name ? (
                                                                 <input type="number" value={editValue} onChange={(e)=>setEditValue(e.target.value)} style={{width: '9rem', padding: '0.5rem 0.75rem', border: `2px solid ${BRAND_COLORS.primary}`, borderRadius: '0.5rem', textAlign: 'right', fontWeight: 'bold', color: BRAND_COLORS.black}} placeholder={member.currency === "KRW" ? "원 단위 입력 (예: 100000000)" : member.currency === "처" ? "처수 입력" : member.currency === "대" ? "대수 입력" : "현지화폐"} autoFocus />
                                                             ) : (
                                                                 <span style={{fontWeight: 'bold', color: BRAND_COLORS.black}}>{formatLocalCurrency(member.displaySales,member.currency)}</span>
                                                             )}
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'right'}}>
-                                                            <span style={{padding: '0.5rem 1rem', borderRadius: '0.75rem', fontSize: '1rem', fontWeight: '900', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', color: 'white', backgroundColor: member.achievement>=100 ? ACCENT_COLORS.gold : member.achievement>=80 ? BRAND_COLORS.primary : member.achievement>=50 ? BRAND_COLORS.darkGray : BRAND_COLORS.coolGray}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right'}}>
+                                                            <span style={{padding: '0.25rem 0.75rem', borderRadius: '0.75rem', fontSize: '0.875rem', fontWeight: '900', boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)', color: 'white', backgroundColor: index===0 ? ACCENT_COLORS.gold : index===1 ? '#4A90D9' : index===2 ? ACCENT_COLORS.bronze : index===3 ? ACCENT_COLORS.green : member.achievement>=100 ? ACCENT_COLORS.gold : member.achievement>=80 ? BRAND_COLORS.primary : member.achievement>=50 ? BRAND_COLORS.darkGray : BRAND_COLORS.coolGray}}>
                                                                 {member.achievement}%
                                                             </span>
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'center', fontSize: '0.85rem', color: BRAND_COLORS.coolGray}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'center', fontSize: '0.8rem', color: BRAND_COLORS.coolGray, whiteSpace: 'nowrap'}}>
                                                             {member.lastUpdated || '-'}
                                                         </td>
-                                                        <td style={{padding: '1rem', textAlign: 'center'}}>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'center'}}>
                                                             {editingMember===member.name ? (
                                                                 <div style={{display: 'flex', justifyContent: 'center', gap: '0.5rem'}}>
                                                                     <button onClick={()=>handleSave(member.name)} style={{padding: '0.5rem', borderRadius: '0.5rem', border: 'none', cursor: 'pointer', backgroundColor: 'transparent', transition: 'background-color 0.3s'}}>
