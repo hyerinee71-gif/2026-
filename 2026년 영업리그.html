@@ -118,7 +118,7 @@
             '4부(해외)': [
                 { name: '오미소', division: '해외', targetKRW: 6, targetLocal: 703126, currency: 'USD', location: '필리핀 지사', growth: 100, sales: 0, lastYearAchievement: 50 },
                 { name: '김단비', division: '해외', targetKRW: 17, targetLocal: 1057569, currency: 'EUR', location: '이탈리아', growth: 37, sales: 0, lastYearAchievement: 67 },
-                { name: '최빅토리아', division: '해외', targetKRW: 13, targetLocal: 914064, currency: 'USD', location: '러시아/카자흐스탄', growth: 63, sales: 0, lastYearAchievement: 100 },
+                { name: '최빅토리아', division: '해외', targetKRW: 13, targetLocal: 13, currency: 'KRW', location: '러시아/카자흐스탄', growth: 63, sales: 0, lastYearAchievement: 100 },
                 { name: '황성덕', division: '해외', targetKRW: 25, targetLocal: 1757815, currency: 'USD', location: 'UAE', growth: 39, sales: 0, lastYearAchievement: 67 },
                 { name: '서준원', division: '해외', targetKRW: 5, targetLocal: 351563, currency: 'USD', location: '모로코', growth: 150, sales: 0, lastYearAchievement: 33 },
                 { name: '문예림', division: '해외', targetKRW: 11, targetLocal: 773439, currency: 'USD', location: '아르헨티나', growth: 50, sales: 0, lastYearAchievement: 67 },
@@ -321,10 +321,15 @@
                     salesKRW = convertToKRW(displaySales, member.currency);
                 }
                 
+                // KRW는 원화(억) 기준 달성률, 나머지는 현지화폐 기준
+                const achievement = member.currency === 'KRW'
+                    ? calculateAchievement(salesKRW, member.targetKRW)
+                    : calculateAchievement(displaySales, member.targetLocal);
+
                 return {
                     ...member,
                     displaySales,
-                    achievement: calculateAchievement(displaySales, member.targetLocal),
+                    achievement,
                     salesKRW
                 };
             });
@@ -522,7 +527,7 @@
                                                 </div>
                                                 <div style={{position: 'relative', height: '4rem', background: '#f3f4f6', borderRadius: '1rem', overflow: 'hidden', boxShadow: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)'}}>
                                                     <div style={{position: 'absolute', top: 0, left: 0, height: '100%', borderRadius: '1rem', transition: 'width 1s ease-out', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', paddingRight: '1.5rem', width: `${Math.min(league.avgAchievement,100)}%`, background: index===0 ? `linear-gradient(90deg, ${BRAND_COLORS.primary}, #C91F37)` : index===1 ? 'linear-gradient(90deg, #9333EA, #7C3AED)' : index===2 ? 'linear-gradient(90deg, #3B82F6, #2563EB)' : index===3 ? 'linear-gradient(90deg, #10B981, #059669)' : `linear-gradient(90deg, ${BRAND_COLORS.coolGray}, ${BRAND_COLORS.darkGray})`}}>
-                                                        {league.avgAchievement>10 && <span style={{fontSize: '1.125rem', fontWeight: '900', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>{league.avgAchievement}%</span>}
+                                                        {league.avgAchievement>3 && <span style={{fontSize: '1.125rem', fontWeight: '900', color: 'white', textShadow: '0 2px 4px rgba(0,0,0,0.1)'}}>{league.avgAchievement}%</span>}
                                                     </div>
                                                 </div>
                                             </div>
@@ -690,7 +695,7 @@
                                                 </div>
                                                 <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '0.25rem', fontSize: '0.75rem', color: BRAND_COLORS.coolGray}}>
                                                     <span>{member.location}</span>
-                                                    <span>목표: {formatLocalCurrency(member.targetLocal,member.currency)}</span>
+                                                    <span>목표: {member.currency === 'KRW' ? `${member.targetKRW}억` : formatLocalCurrency(member.targetLocal,member.currency)}</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -712,7 +717,7 @@
                                                     <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>목표(원화)</th>
                                                     <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>목표(현지)</th>
                                                     <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>실적(원화)</th>
-                                                    <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>실적(현지)</th>
+                                                    <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>실적(현지)</th>
                                                     <th style={{textAlign: 'right', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>달성률(현지)</th>
                                                     <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', whiteSpace: 'nowrap'}}>최종 업데이트</th>
                                                     <th style={{textAlign: 'center', padding: '0.75rem 1rem', color: 'white', fontWeight: '900', borderTopRightRadius: '0.75rem', whiteSpace: 'nowrap'}}>수정</th>
@@ -734,7 +739,7 @@
                                                         <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
                                                             {member.targetKRW > 0 ? `${member.targetKRW}억` : '-'}
                                                         </td>
-                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', color: BRAND_COLORS.coolGray}}>{formatLocalCurrency(member.targetLocal,member.currency)}</td>
+                                                        <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', color: BRAND_COLORS.coolGray}}>{member.currency === 'KRW' ? '-' : formatLocalCurrency(member.targetLocal,member.currency)}</td>
                                                         <td style={{padding: '0.5rem 1rem', textAlign: 'right', fontSize: '0.875rem', fontWeight: 'bold', color: BRAND_COLORS.darkGray}}>
                                                             {member.currency === '처' || member.currency === '대' ? '-' : `${member.salesKRW.toFixed(1)}억`}
                                                         </td>
@@ -742,7 +747,7 @@
                                                             {editingMember===member.name ? (
                                                                 <input type="number" value={editValue} onChange={(e)=>setEditValue(e.target.value)} style={{width: '9rem', padding: '0.5rem 0.75rem', border: `2px solid ${BRAND_COLORS.primary}`, borderRadius: '0.5rem', textAlign: 'right', fontWeight: 'bold', color: BRAND_COLORS.black}} placeholder={member.currency === "KRW" ? "원 단위 입력 (예: 100000000)" : member.currency === "처" ? "처수 입력" : member.currency === "대" ? "대수 입력" : "현지화폐"} autoFocus />
                                                             ) : (
-                                                                <span style={{fontWeight: 'bold', color: BRAND_COLORS.black}}>{formatLocalCurrency(member.displaySales,member.currency)}</span>
+                                                                <span style={{fontWeight: 'bold', color: BRAND_COLORS.black}}>{member.currency === 'KRW' ? '-' : formatLocalCurrency(member.displaySales,member.currency)}</span>
                                                             )}
                                                         </td>
                                                         <td style={{padding: '0.5rem 1rem', textAlign: 'right'}}>
